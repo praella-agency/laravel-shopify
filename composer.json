@@ -1,5 +1,5 @@
 {
-    "name": "ohmybrew/laravel-shopify",
+    "name": "hulkapps/laravel-shopify",
     "description": "Shopify package for Laravel to aide in app development",
     "keywords": [
         "laravel",
@@ -14,6 +14,9 @@
         {
             "name": "Tyler King",
             "email": "tyler@ohmybrew.com"
+        },{
+            "name": "Divyank",
+            "email": "divyank@hulkapps.com"
         }
     ],
     "require": {
