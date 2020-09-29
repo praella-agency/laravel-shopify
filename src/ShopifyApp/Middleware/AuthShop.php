@@ -160,7 +160,7 @@ class AuthShop
         // Verify
         $verify = [];
         foreach ($request->all() as $key => $value) {
-            $verify[$key] = is_array($value) ? '["'.implode('", "', $value).'"]' : $value;
+            $verify[$key] = is_array($value) ? '["'.implode('", "', $value).'"]' : (is_null($value) ? "" : $value);
         }
 
         // Make sure there is no param spoofing attempt
