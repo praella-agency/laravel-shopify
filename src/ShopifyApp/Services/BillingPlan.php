@@ -175,7 +175,7 @@ class BillingPlan
             ],
         ];
 
-        $response = ShopifyApp::doRequestGraphQL($query,$variables);
+        $response = \ShopifyApp::doRequestGraphQL($query,$variables);
 
         if ($response['errors'] == false) {
 
