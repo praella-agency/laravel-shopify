@@ -13,6 +13,9 @@ class Plan extends Model
     const PLAN_RECURRING = 1;
     const PLAN_ONETIME = 2;
 
+    const INTERVAL_MONTHLY = 1;
+    const INTERVAL_YEARLY = 2;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -69,6 +72,27 @@ class Plan extends Model
         }
 
         return $plural ? "{$type}s" : $type;
+    }
+
+    /**
+     * Returns the plan interval as a string (for API).
+     *
+     * @return string
+     */
+    public function intervalAsString()
+    {
+        $type = null;
+        switch ($this->interval) {
+            case self::INTERVAL_YEARLY:
+                $type = 'ANNUAL';
+                break;
+            default:
+            case self::INTERVAL_MONTHLY:
+                $type = 'EVERY_30_DAYS';
+                break;
+        }
+
+        return $type;
     }
 
     /**

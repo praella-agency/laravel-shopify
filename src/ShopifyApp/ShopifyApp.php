@@ -90,6 +90,28 @@ class ShopifyApp
         return $api;
     }
 
+
+    /**
+     * Do GraphQL call
+     *
+     * @param string $query
+     * @param array|null $payload
+     * @return mixed
+     */
+    public function doRequestGraphQL(string $query, array $payload = null)
+    {
+        $response = json_decode(json_encode($this->shop->api()->graph($query, $payload)),true);
+        if ($response['errors'] !== false) {
+            $message = is_array($response['errors'])
+                ? $response['errors'][0]['message'] : $response['errors'];
+
+            // Request error somewhere, throw the exception
+            throw new Exception($message);
+        }
+
+        return $response;
+    }
+
     /**
      * Ensures shop domain meets the specs.
      *

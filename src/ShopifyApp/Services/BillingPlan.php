@@ -113,13 +113,74 @@ class BillingPlan
     public function confirmationUrl()
     {
         // Begin the charge request
-        $charge = $this->api->rest(
-            'POST',
-            "/admin/{$this->plan->typeAsString(true)}.json",
-            ["{$this->plan->typeAsString()}" => $this->chargeParams()]
-        )->body->{$this->plan->typeAsString()};
+        $query = '
+        mutation appSubscriptionCreate(
+            $name: String!,
+            $returnUrl: URL!,
+            $trialDays: Int,
+            $test: Boolean,
+            $lineItems: [AppSubscriptionLineItemInput!]!
+        ) {
+            appSubscriptionCreate(
+                name: $name,
+                returnUrl: $returnUrl,
+                trialDays: $trialDays,
+                test: $test,
+                lineItems: $lineItems
+            ) {
+                appSubscription {
+                    id
+                }
+                confirmationUrl
+                userErrors {
+                    field
+                    message
+                }
+            }
+        }';
 
-        return $charge->confirmation_url;
+        if ($this->plan->typeAsString() == 'application_charge') {
+
+            $plan= [
+                'appUsagePricingDetails' => [
+                    'cappedAmount' => $this->plan->capped_amount,
+                    'terms' => $this->plan->terms
+                ],
+            ];
+        } else {
+
+            $plan = [
+                'appRecurringPricingDetails' => [
+                    'price'    => [
+                        'amount'       => $this->plan->price,
+                        'currencyCode' => 'USD',
+                    ],
+                    'interval' => $this->plan->intervalAsString(),
+                ],
+            ];
+        }
+
+        $variables = [
+            'name'      => $this->plan->name,
+            'returnUrl' => URL::secure(
+                Config::get('shopify-app.billing_redirect'),
+                ['plan_id' => $this->plan->id]
+            ),
+            'trialDays' => $this->determineTrialDays(),
+            'test'      => $this->plan->isTest(),
+            'lineItems' => [
+                [
+                    'plan' => $plan
+                ],
+            ],
+        ];
+
+        $response = ShopifyApp::doRequestGraphQL($query,$variables);
+
+        if ($response['errors'] == false) {
+
+            return $response['body']['appSubscriptionCreate']['confirmationUrl'];
+        }
     }
 
     /**
