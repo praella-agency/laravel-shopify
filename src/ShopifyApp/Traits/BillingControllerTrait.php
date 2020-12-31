@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use HulkApps\ShopifyApp\Facades\ShopifyApp;
 use HulkApps\ShopifyApp\Models\Charge;
-use HulkApps\ShopifyApp\Models\Plan;
+use HulkApps\Shopify\Billing\Models\Plan;
 use HulkApps\ShopifyApp\Models\Shop;
 use HulkApps\ShopifyApp\Requests\StoreUsageCharge;
 use HulkApps\ShopifyApp\Services\BillingPlan;
@@ -21,7 +21,7 @@ trait BillingControllerTrait
     /**
      * Redirects to billing screen for Shopify.
      *
-     * @param \HulkApps\ShopifyApp\Models\Plan $plan The plan.
+     * @param \HulkApps\Shopify\Billing\Models\Plan $plan The plan.
      *
      * @return \Illuminate\View\View
      */
@@ -43,7 +43,7 @@ trait BillingControllerTrait
     /**
      * Processes the response from the customer.
      *
-     * @param \HulkApps\ShopifyApp\Models\Plan $plan The plan.
+     * @param \HulkApps\Shopify\Billing\Models\Plan $plan The plan.
      *
      * @return \Illuminate\Http\RedirectResponse
      */
